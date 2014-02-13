@@ -1,6 +1,8 @@
 require_relative 'cards'
 
 class Store
+	CARDS_PER_PACK = 5
+
 	RARITIES = [:common, :rare, :epic, :legendary]
 	
 	GOLDEN_RARITIES = {
@@ -86,16 +88,15 @@ class Store
 	end
 
 	def buyPack
-		pack = Array.new(5)
-		pack[0] = randomCard
-		pack[1] = randomCard
-		pack[2] = randomCard
-		pack[3] = randomCard
-		contains_rare = pack[0..3].any? {|card| atLeastRare? card}
+		pack = Array.new(CARDS_PER_PACK)
+		for i in 0..CARDS_PER_PACK-2
+			pack[i] = randomCard
+		end
+		contains_rare = pack[0..CARDS_PER_PACK-2].any? {|card| atLeastRare? card}
 		if !contains_rare
-			pack[4] = randomRare
+			pack[CARDS_PER_PACK-1] = randomRare
 		else
-			pack[4] = randomCard
+			pack[CARDS_PER_PACK-1] = randomCard
 		end
 		pack
 	end

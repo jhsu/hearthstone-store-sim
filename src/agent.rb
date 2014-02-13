@@ -28,7 +28,7 @@ class Agent
 
 		@dust, c = @collection.craftRarest(@dust)
 		@crafted += c
-		@cards += 5 + c - (n_ex + n_g)
+		@cards += Store::CARDS_PER_PACK + c - (n_ex + n_g)
 	end
 
 	def complete?
