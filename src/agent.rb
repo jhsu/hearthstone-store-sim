@@ -28,11 +28,13 @@ class Agent
 
 		@dust, c = @collection.craftRarest(@dust)
 		@crafted += c
-		@cards += Store::CARDS_PER_PACK + c - (n_ex + n_g)
+		new_cards = Store::CARDS_PER_PACK + c - (n_ex + n_g)
+		@cards += new_cards
+		return new_cards
 	end
 
 	def complete?
-		@cards < TOTAL_UNIQUE_CARDS
+		@cards >= TOTAL_UNIQUE_CARDS
 	end
 
 	def run
