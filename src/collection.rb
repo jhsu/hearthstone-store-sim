@@ -37,8 +37,16 @@ class CardCollection
 		@cards[0..TOTAL_UNIQUE_CARDS-1].all? { |card| card.complete? }
 	end
 
+	def goldenComplete?
+		@cards[TOTAL_UNIQUE_CARDS..2*TOTAL_UNIQUE_CARDS-1].all? { |card| card.complete? }
+	end
+
 	def completion
 		@cards[0..TOTAL_UNIQUE_CARDS-1].reduce(0) {|memo, card| card.complete? ? memo + 1 : memo} / TOTAL_UNIQUE_CARDS.to_f
+	end
+
+	def goldenCompletion?
+		@cards[TOTAL_UNIQUE_CARDS..2*TOTAL_UNIQUE_CARDS-1].reduce(0) {|memo, card| card.complete? ? memo + 1 : memo} / TOTAL_UNIQUE_CARDS.to_f
 	end
 
 	def disenchantExtras
@@ -63,9 +71,9 @@ class CardCollection
 		return dust, n
 	end
 
-	def craftRarest(dust)
+	def craft(dust, cards)
 		n = 0
-		for card in @cards[0..TOTAL_UNIQUE_CARDS-1].reverse
+		for card in cards
 			if !card.complete?
 				missing = card.numMissing
 				if missing * card.craft_cost <= dust
@@ -83,5 +91,13 @@ class CardCollection
 			end
 		end
 		return dust, n
+	end
+
+	def craftRarest(dust)
+		if complete? 
+			craft(dust, @cards[TOTAL_UNIQUE_CARDS..2*TOTAL_UNIQUE_CARDS-1].reverse)
+		else
+			craft(dust, @cards[0..TOTAL_UNIQUE_CARDS-1].reverse)
+		end
 	end
 end

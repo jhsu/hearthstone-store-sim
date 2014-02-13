@@ -31,6 +31,10 @@ class Agent
 		@cards += 5 + c - (n_ex + n_g)
 	end
 
+	def complete?
+		@cards < TOTAL_UNIQUE_CARDS
+	end
+
 	def run
 		while !@collection.complete?
 			buyPack
