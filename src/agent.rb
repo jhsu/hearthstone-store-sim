@@ -3,10 +3,11 @@ require_relative 'store'
 require_relative 'collection'
 
 class Agent
-	attr_reader :collection
 	attr_reader :purchased
 	attr_reader :disenchanted
 	attr_reader :crafted
+	attr_reader :cards
+	attr_reader :dust
 
 	def initialize
 		@collection = CardCollection.new
@@ -15,6 +16,7 @@ class Agent
 		@disenchanted = 0
 		@crafted = 0
 		@cards = 0
+		@purchased = 0
 	end
 
 	def buyPack
@@ -30,6 +32,7 @@ class Agent
 		@crafted += c
 		new_cards = Store::CARDS_PER_PACK + c - (n_ex + n_g)
 		@cards += new_cards
+		@purchased += 1
 		return new_cards
 	end
 
