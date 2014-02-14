@@ -65,13 +65,14 @@ end
 class CommonCard < CardBase
 	OFFSET = 0
 	NUM_UNIQUES = 94
+	MAX_COPIES = 2
 
 	def initialize
 		super
 		@disenchant_value = 5
 		@craft_cost = 40
 		@num_uniques = NUM_UNIQUES
-		@max_copies = 2		
+		@max_copies = MAX_COPIES		
 	end
 
 	def self.rand
@@ -82,13 +83,14 @@ end
 class RareCard < CardBase
 	OFFSET = CommonCard::OFFSET + CommonCard::NUM_UNIQUES
 	NUM_UNIQUES = 81
+	MAX_COPIES = 2
 
 	def initialize
 		super
 		@disenchant_value = 20
 		@craft_cost = 100
 		@num_uniques = NUM_UNIQUES
-		@max_copies = 2		
+		@max_copies = MAX_COPIES		
 	end
 
 	def self.rand
@@ -99,13 +101,14 @@ end
 class EpicCard < CardBase
 	OFFSET = RareCard::OFFSET + RareCard::NUM_UNIQUES
 	NUM_UNIQUES = 37
+	MAX_COPIES = 2
 
 	def initialize
 		super
 		@disenchant_value = 100
 		@craft_cost = 400
 		@num_uniques = NUM_UNIQUES
-		@max_copies = 2		
+		@max_copies = MAX_COPIES		
 	end
 
 	def self.rand
@@ -116,13 +119,14 @@ end
 class LegendaryCard < CardBase
 	OFFSET = EpicCard::OFFSET + EpicCard::NUM_UNIQUES
 	NUM_UNIQUES = 33
+	MAX_COPIES = 1
 
 	def initialize
 		super
 		@disenchant_value = 400
 		@craft_cost = 1600
 		@num_uniques = NUM_UNIQUES
-		@max_copies = 1		
+		@max_copies = MAX_COPIES		
 	end
 
 	def self.rand
@@ -199,3 +203,4 @@ class GoldenLegendaryCard < CardBase
 end
 
 TOTAL_UNIQUE_CARDS = CommonCard::NUM_UNIQUES + RareCard::NUM_UNIQUES + EpicCard::NUM_UNIQUES + LegendaryCard::NUM_UNIQUES
+COMPLETE_COLLECTION = CommonCard::NUM_UNIQUES * CommonCard::MAX_COPIES + RareCard::NUM_UNIQUES * RareCard::MAX_COPIES + EpicCard::NUM_UNIQUES * EpicCard::MAX_COPIES + LegendaryCard::NUM_UNIQUES * LegendaryCard::MAX_COPIES

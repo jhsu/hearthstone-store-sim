@@ -4,15 +4,8 @@ class Store
 	CARDS_PER_PACK = 5
 
 	RARITIES = [:common, :rare, :epic, :legendary]
-	
-	GOLDEN_RARITIES = {
-		common: :golden_common,
-		rare: :golden_rare,
-		epic: :golden_epic,
-		legendary: :golden_legendary
-	}
 
-	P_RARITY = {
+	DISTRIBUTION = {
 		common: 0.74,
 		rare: 0.95,
 		epic: 0.99,
@@ -26,24 +19,16 @@ class Store
 		legendary: 0.05
 	}
 
-	def makeCard(rarity)
+	def makeCard(rarity, golden)
 		case rarity
 		when :common
-			CommonCard.rand
+			golden ? GoldenCommonCard.rand : CommonCard.rand
 		when :rare
-			RareCard.rand
+			golden ? GoldenRareCard.rand : RareCard.rand
 		when :epic
-			EpicCard.rand
+			golden ? GoldenEpicCard.rand : EpicCard.rand
 		when :legendary
-			LegendaryCard.rand
-		when :golden_common
-			GoldenCommonCard.rand
-		when :golden_rare
-			GoldenRareCard.rand
-		when :golden_epic
-			GoldenEpicCard.rand
-		when :golden_legendary
-			GoldenLegendaryCard.rand
+			golden ? GoldenLegendaryCard.rand : LegendaryCard.rand
 		else
 			raise "unrecognized rarity"
 		end
@@ -52,7 +37,7 @@ class Store
 	def randomRarity
 		r = Random.rand
 		for rarity in RARITIES
-			if r < P_RARITY[rarity]
+			if r < DISTRIBUTION[rarity]
 				return rarity
 			end
 		end 
@@ -70,21 +55,12 @@ class Store
 	def randomCard
 		rarity = randomRarity
 		golden = randomGold(rarity)
-		if golden
-			makeCard(GOLDEN_RARITIES[rarity])
-		else
-			makeCard(rarity)
-		end
+		makeCard(rarity, golden)
 	end
 
 	def randomRare
-		rarity = :rare
-		golden = randomGold(rarity)
-		if golden
-			makeCard(GOLDEN_RARITIES[rarity])
-		else
-			makeCard(rarity)
-		end
+		golden = randomGold(:rare)
+		makeCard(:rare, golden)
 	end
 
 	def buyPack
@@ -98,6 +74,6 @@ class Store
 		else
 			pack[CARDS_PER_PACK-1] = randomCard
 		end
-		pack
+		return pack
 	end
 end

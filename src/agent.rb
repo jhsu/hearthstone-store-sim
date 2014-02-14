@@ -8,6 +8,7 @@ class Agent
 	attr_reader :crafted
 	attr_reader :cards
 	attr_reader :dust
+	attr_reader :cards_record
 
 	def initialize
 		@collection = CardCollection.new
@@ -17,6 +18,7 @@ class Agent
 		@crafted = 0
 		@cards = 0
 		@purchased = 0
+		@cards_record = Array.new
 	end
 
 	def buyPack
@@ -32,12 +34,13 @@ class Agent
 		@crafted += c
 		new_cards = Store::CARDS_PER_PACK + c - (n_ex + n_g)
 		@cards += new_cards
+		@cards_record.push(@cards)
 		@purchased += 1
 		return new_cards
 	end
 
 	def complete?
-		@cards >= TOTAL_UNIQUE_CARDS
+		@cards >= COMPLETE_COLLECTION
 	end
 
 	def run
