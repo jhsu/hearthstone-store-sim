@@ -1,4 +1,5 @@
 require('ggplot2')
+require('reshape2')
 
 cards = read.csv('../data/cards.csv')
 cards_long = melt(cards, id.vars="Packs", value.name="Cards", variable.name="Agent")
