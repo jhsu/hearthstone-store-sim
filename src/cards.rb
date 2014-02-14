@@ -3,11 +3,14 @@
 # epic = 175..211
 # legendary = 212..244
 
+# Determine if a card is at least a rare card or better given its id
 def atLeastRare?(card_id)
 	(card_id >= CommonCard::NUM_UNIQUES and card_id < TOTAL_UNIQUE_CARDS) or # non-golden set
 		(card_id >= TOTAL_UNIQUE_CARDS + CommonCard::NUM_UNIQUES and card_id < 2 * TOTAL_UNIQUE_CARDS) # golden set
 end
 
+# Base class of all other cards. Each Card object keeps track of how many copies
+# of it are in your collection.
 class CardBase
 	attr_reader :disenchant_value
 	attr_reader :craft_cost
@@ -19,14 +22,17 @@ class CardBase
 		@copies = 0
 	end
 
+	# Add a new copy
 	def addCopy
 		@copies += 1
 	end
 
+	# Add n new copies
 	def addCopies(n)
 		@copies += n
 	end
 
+	# Remove a copy, if possible
 	def removeCopy
 		if @copies > 0
 			@copies -= 1
@@ -34,34 +40,41 @@ class CardBase
 		@copies
 	end
 
+	# Remove all extras
 	def removeExtras
 		n = numExtras
 		@copies -= n
 		n
 	end
 
+	# Remove all copies
 	def removeAll
 		@copies, n = 0, @copies
 		return n
 	end
 
+	# Test if we have reached or exceeded the maximum number of copies
 	def complete?
 		@copies >= @max_copies
 	end
 
+	# Test if we have exceeded the maximum number of copies
 	def extras?
 		@copies > @max_copies
 	end
 
+	# Calculate the number of extra copies
 	def numExtras
 		extras? ? @copies - @max_copies : 0
 	end
 
+	# Calculate the number of copies required to complete this card
 	def numMissing
 		complete? ? 0 : @max_copies - @copies
 	end
 end
 
+# Contains data specific to common cards
 class CommonCard < CardBase
 	OFFSET = 0
 	NUM_UNIQUES = 94
@@ -80,6 +93,7 @@ class CommonCard < CardBase
 	end
 end
 
+# Contains data specific to rare cards
 class RareCard < CardBase
 	OFFSET = CommonCard::OFFSET + CommonCard::NUM_UNIQUES
 	NUM_UNIQUES = 81
@@ -98,6 +112,7 @@ class RareCard < CardBase
 	end
 end
 
+# Contains data specific to epic cards
 class EpicCard < CardBase
 	OFFSET = RareCard::OFFSET + RareCard::NUM_UNIQUES
 	NUM_UNIQUES = 37
@@ -116,6 +131,7 @@ class EpicCard < CardBase
 	end
 end
 
+# Contains data specific to legendary cards
 class LegendaryCard < CardBase
 	OFFSET = EpicCard::OFFSET + EpicCard::NUM_UNIQUES
 	NUM_UNIQUES = 33
@@ -134,6 +150,7 @@ class LegendaryCard < CardBase
 	end
 end
 
+# Contains data specific to golden common cards
 class GoldenCommonCard < CardBase
 	OFFSET = LegendaryCard::OFFSET + LegendaryCard::NUM_UNIQUES
 	NUM_UNIQUES = 94
@@ -151,6 +168,7 @@ class GoldenCommonCard < CardBase
 	end
 end
 
+# Contains data specific to golden rare cards
 class GoldenRareCard < CardBase
 	OFFSET = GoldenCommonCard::OFFSET + GoldenCommonCard::NUM_UNIQUES
 	NUM_UNIQUES = 81
@@ -168,6 +186,7 @@ class GoldenRareCard < CardBase
 	end
 end
 
+# Contains data specific to golden epic cards
 class GoldenEpicCard < CardBase
 	OFFSET = GoldenRareCard::OFFSET + GoldenRareCard::NUM_UNIQUES
 	NUM_UNIQUES = 37
@@ -185,6 +204,7 @@ class GoldenEpicCard < CardBase
 	end
 end
 
+# Contains data specific to golden legendary cards
 class GoldenLegendaryCard < CardBase
 	OFFSET = GoldenEpicCard::OFFSET + GoldenEpicCard::NUM_UNIQUES
 	NUM_UNIQUES = 33
@@ -202,5 +222,6 @@ class GoldenLegendaryCard < CardBase
 	end
 end
 
+# Now that we have all the cards, lets compute some upper bounds on our collection
 TOTAL_UNIQUE_CARDS = CommonCard::NUM_UNIQUES + RareCard::NUM_UNIQUES + EpicCard::NUM_UNIQUES + LegendaryCard::NUM_UNIQUES
 COMPLETE_COLLECTION = CommonCard::NUM_UNIQUES * CommonCard::MAX_COPIES + RareCard::NUM_UNIQUES * RareCard::MAX_COPIES + EpicCard::NUM_UNIQUES * EpicCard::MAX_COPIES + LegendaryCard::NUM_UNIQUES * LegendaryCard::MAX_COPIES

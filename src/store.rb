@@ -1,10 +1,13 @@
 require_relative 'cards'
 
+# The Store handles the task of generating packs of random cards.
 class Store
 	CARDS_PER_PACK = 5
 
 	RARITIES = [:common, :rare, :epic, :legendary]
 
+	# Probability distributions for each rarity.
+	# Taken from: http://iam.yellingontheinternet.com/2013/10/10/from-dust-to-dust-the-economy-of-hearthstone/
 	DISTRIBUTION = {
 		common: 0.74,
 		rare: 0.95,
@@ -12,6 +15,7 @@ class Store
 		legendary: 1.0
 	}
 
+	# Probability of getting a golden version of a card
 	P_GOLDEN = {
 		common: 0.02, 
 		rare: 0.05, 
@@ -19,6 +23,7 @@ class Store
 		legendary: 0.05
 	}
 
+	# Generate a random card for a given rarity. Make it golden if necessary.
 	def makeCard(rarity, golden)
 		case rarity
 		when :common
@@ -34,6 +39,7 @@ class Store
 		end
 	end
 
+	# Pick a random rarity
 	def randomRarity
 		r = Random.rand
 		for rarity in RARITIES
@@ -43,6 +49,7 @@ class Store
 		end 
 	end
 
+	# Determine if a given rarity is a golden version or not
 	def randomGold(rarity)
 		r = Random.rand
 		if r < P_GOLDEN[rarity]
@@ -52,17 +59,20 @@ class Store
 		end
 	end
 
+	# Generate a random card of any rarity
 	def randomCard
 		rarity = randomRarity
 		golden = randomGold(rarity)
 		makeCard(rarity, golden)
 	end
 
+	# Generate a random rare card
 	def randomRare
 		golden = randomGold(:rare)
 		makeCard(:rare, golden)
 	end
 
+	# Generate a new pack of random cards. At least one card will be rare or better
 	def buyPack
 		pack = Array.new(CARDS_PER_PACK)
 		for i in 0..CARDS_PER_PACK-2
